@@ -1,0 +1,65 @@
+version: "3"
+services:
+  main:
+    image: mybdpostgres:stable
+    container_name: db_postgres
+    build: .
+    command: >
+      -c max_wal_size=3GB
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "5432:5432"
+
+  python_populator:
+    image: python:3.9-buster
+    depends_on:
+      - main
+    links:
+    - main
+    command: sh -c "pip install psycopg2 && pip install arc && pip install arcgis
+              && chmod 777 -R /tmp
+              && echo  deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main >> /etc/apt/sources.list.d/postgresql.list
+              && wget -O- https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add && apt update
+              && apt -y install postgresql-13
+              && python3 /tmp/populatorDB.py"
+    container_name: python_populator
+    volumes:
+      - ./src:/tmp
+
+  python_consultator:
+    image: python:3.9-buster
+    depends_on:
+      - python_populator
+    links:
+    - main
+    - python_populator
+    command: bash -c "pip install psycopg2 && pip install pandas
+                && chmod 777 -R /tmp
+                && apt update && apt -y install cron vim
+                && chmod +x /tmp/crontab-check
+                && cp /tmp/crontab-check /etc/cron.d/crontab-check && touch /tmp/pp.log && chmod 777 /tmp/pp.log
+                && service cron start
+                && crontab /etc/cron.d/crontab-check
+                && tail -f -n 100 /tmp/pp.log"
+    container_name: python_consultator
+    volumes:
+      - ./src2:/tmp
+
+  web_pgadmin:
+    image: dpage/pgadmin4:5.5
+    depends_on:
+      - python_populator
+    links:
+      - main
+    container_name: web_pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "2222:80"
+    restart: unless-stopped
