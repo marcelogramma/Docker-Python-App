@@ -4,6 +4,7 @@
 #### Resolucion de los ejercicios
 ##### Arbol de archivos
 <img src="./images/2.png"/>
+
 ##### Resolucion Ejercicio 1
 
 Este punto es solo la eleccion del Dataset y consultas, todo explayado en el Readme
