@@ -39,18 +39,24 @@ ConsultatorDB.py contiene una clase  File manager la cual copia la salida de las
 - Redaccion de este articulo y como realizar un script en bash para ejecutar todo directamente
 
 - Crear un archivo llamado [russiafly-end2end.sh](russiafly-end2end.sh).
-     $	touch russiafly-end2end.sh
+ ```$ touch russiafly-end2end.sh```
+ 
 - Darle permiso de ejecucion
-     $ g+x russiafly-end2end.sh
+```$ g+x russiafly-end2end.sh```
+     
 - Editar el archivo creado
-     $ vi russiafly-end2end.sh
+```$ vi russiafly-end2end.sh```
+
 - Introducir el siguiente codigo
 
-`#!/bin/bash`
-`#`
-`git clone https://github.com/itba-cloud-data-engineering/tpf-foundations-marcelogramma.git`
-`cd tpf-foundations-marcelogramma/`
-`docker-compose up`
+```
+#!/bin/bash
+#
+git clone https://github.com/itba-cloud-data-engineering/tpf-foundations-marcelogramma.git
+cd tpf-foundations-marcelogramma/
+docker-compose up
+```
+
 
 - Ejecutarlo
       $ bash russiafly-end2end.sh
