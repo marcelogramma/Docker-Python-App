@@ -59,7 +59,7 @@ docker-compose up
 
 
 - Ejecutarlo
-      $ bash russiafly-end2end.sh
+```$ bash russiafly-end2end.sh```
       
 ##### Ejercicio 7 (fue opcional agregado por mi)
 
